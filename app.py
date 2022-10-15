@@ -124,15 +124,15 @@ def _main(n):
     return data_visual(tayyor)
 
 
-def add_logo(logo_path, width, height):
-    url = urllib.request.urlretrieve(logo_path)
-    logo = Image.open('logo.png')
-    modified_logo = logo.resize((width, height))
-    return modified_logo
+# def add_logo(logo_path, width, height):
+#     url = urllib.request.urlretrieve(logo_path)
+#     logo = Image.open('logo.png')
+#     modified_logo = logo.resize((width, height))
+#     return modified_logo
 
 
 def main_page():
-    st.sidebar.image(add_logo('https://logobank.uz:8005/media/logos_png/astrum-01.png', width=100, height=80))
+    # st.sidebar.image(add_logo('https://logobank.uz:8005/media/logos_png/astrum-01.png', width=100, height=80))
     st.sidebar.markdown("# Tanlang 🔎")
     with st.sidebar:
         with st.form(key='my_form'):
