@@ -1,7 +1,4 @@
-import urllib.request
-
 import streamlit as st
-from PIL import Image
 import plotly.express as px
 from bs4 import BeautifulSoup
 import requests
@@ -28,17 +25,6 @@ def extract(page, n):
     return arrange
 
 
-def ten_news_total(page):
-    links = []
-    soup = BeautifulSoup(page.text, 'html.parser')
-    news = soup.find_all('a', class_='news-lenta')
-    for a in range(5):
-        link = 'https://kun.uz' + str(news[a]).split()[2][6:-2]
-        new = BeautifulSoup(requests.get(link).text, 'html.parser')
-        name = new.find(class_='single-header__title').text
-        links.append({name: link})
-    return links
-
 def remove_stop_words(words, stop_words):
     result = []
     for a in words:
@@ -61,10 +47,6 @@ def remove_stop_words(words, stop_words):
             g = result.index(i)
             h = result.pop(g)
             result.append(h[:-3])
-        # if i[-1] == ':' or i[-1] == '.' or i[-1] == ',':
-        #     a = result.index(i)
-        #     s = result.pop(a)
-        #     result.append(s[:-1])
         try:
             if len(i) <= 2:
                 del result[result.index(i)]
@@ -100,15 +82,12 @@ def data_format(data):
 
 def data_visual(df):
     fig = px.bar(df, x='counts', y="Words", title=f"{maqola_name}", color='counts', orientation='h', width=1500, height=800)
-    # fig.show()
     fig.update_layout(
         xaxis_title="Soni",
         yaxis_title="Eng ko'p ishlatilgan so'zlar",
         legend_title="Soni",
         font=dict(
-            # family="Courier New, monospace",
             size=18,
-            # color="RebeccaPurple"
     ))
     return fig
 
@@ -124,26 +103,14 @@ def _main(n):
     return data_visual(tayyor)
 
 
-# def add_logo(logo_path, width, height):
-#     url = urllib.request.urlretrieve(logo_path)
-#     logo = Image.open('logo.png')
-#     modified_logo = logo.resize((width, height))
-#     return modified_logo
-
-
 def main_page():
-    # st.sidebar.image(add_logo('https://logobank.uz:8005/media/logos_png/astrum-01.png', width=100, height=80))
     st.sidebar.markdown("# Tanlang 🔎")
     with st.sidebar:
         with st.form(key='my_form'):
-            # st.write("Inside the form")
             slider_val = st.slider("Qaysi yangilik?", max_value=25)
-            # Every form must have a submit button.
             submitted = st.form_submit_button("Submit")
             if submitted:
-                # st.write("slider", slider_val)
                 son = True
-    # st.sidebar.number_input('enter', step=1, max_value=20, min_value=1)
     if slider_val == 0:
         st.markdown("<h2 style='text-align: left; color: blue'>Eng So'nggi Yanglik</h2>", unsafe_allow_html=True)
     else:
@@ -171,6 +138,3 @@ def main_page():
             st.plotly_chart(_main(0), use_container_width=False)
     else:
         st.plotly_chart(_main(slider_val), use_container_width=False)
-
-
-main_page()
