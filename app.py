@@ -139,4 +139,4 @@ def main_page():
     else:
         st.plotly_chart(_main(slider_val), use_container_width=False)
 
-_main()
+main_page()
