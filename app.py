@@ -1,3 +1,4 @@
+# Importing libraries
 import streamlit as st
 import plotly.express as px
 from bs4 import BeautifulSoup
@@ -5,11 +6,13 @@ import requests
 import pandas as pd
 
 
+# GET request to website
 def request_url(url):
     url = requests.get(url)
     return url
 
 
+# Extract important information from the website
 def extract(page, n):
     global maqola_name
     soup = BeautifulSoup(page.text, 'html.parser')
@@ -25,6 +28,7 @@ def extract(page, n):
     return arrange
 
 
+# Cleaning words in Uzbek from unnecessary additions.
 def remove_stop_words(words, stop_words):
     result = []
     for a in words:
@@ -50,9 +54,6 @@ def remove_stop_words(words, stop_words):
         try:
             if len(i) <= 2:
                 del result[result.index(i)]
-        except:
-            pass
-        try:
             num = int(i[-1])
             result.remove(i)
         except:
@@ -61,6 +62,7 @@ def remove_stop_words(words, stop_words):
     return result
 
 
+# A function that counts how many words there are
 def count_words(filter_words):
     result = {}
     for a in filter_words:
@@ -70,9 +72,10 @@ def count_words(filter_words):
     return result
 
 
+# Bringing the collected information into a tabular form and sorting.
 def data_format(data):
     df = pd.DataFrame.from_dict(data, orient='index')
-    df1 = df.rename(columns={0:'count'})
+    df1 = df.rename(columns={0: 'count'})
     df2 = df1.sort_values(
         'count')
     df3 = df2.tail(15).reset_index()
@@ -80,6 +83,7 @@ def data_format(data):
     return df3
 
 
+# Bringing the collected information into a tabular form and sorting.
 def data_visual(df):
     fig = px.bar(df, x='counts', y="Words", title=f"{maqola_name}", color='counts', orientation='h', width=1500, height=800)
     fig.update_layout(
@@ -92,6 +96,7 @@ def data_visual(df):
     return fig
 
 
+# using functions sequentially
 def _main(n):
     url = 'https://kun.uz/uz/news/list'
     page = request_url(url)
@@ -103,6 +108,7 @@ def _main(n):
     return data_visual(tayyor)
 
 
+# Web site part
 def main_page():
     st.sidebar.markdown("# Tanlang 🔎")
     with st.sidebar:
@@ -138,5 +144,6 @@ def main_page():
             st.plotly_chart(_main(0), use_container_width=False)
     else:
         st.plotly_chart(_main(slider_val), use_container_width=False)
+
 
 main_page()
